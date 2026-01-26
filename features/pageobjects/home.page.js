@@ -7,30 +7,49 @@ class HomePage extends Page {
   }
 
   get archieveHabitsButton() {
-    return driver.$(
-      'xpath://XCUIElementTypeButton[@name="Archived Habits\nView archived habits"]',
-    );
+    return '//XCUIElementTypeButton[@name="Archived Habits\nView archived habits"]';
   }
 
   get statisticsButton() {
-    return driver.$(
-      'xpath://XCUIElementTypeButton[@name="Statistics\nStatistics"]',
-    );
+    return '//XCUIElementTypeButton[@name=\"Statistics\nStatistics\"]';
   }
 
   get getSettingsButton() {
-    return driver.$(
-      'xpath://XCUIElementTypeButton[@name="Settings\nSettings"]',
-    );
+    return '//XCUIElementTypeButton[@name=\"Settings\nSettings\"]';
+  }
+
+  get habitListEmpty() {
+    return `//XCUIElementTypeApplication[@name="Habo"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeOther[4]/XCUIElementTypeOther[1]`;
+  }
+
+  get habitListFilled() {
+    return "//XCUIElementTypeWindow/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeOther[4]/XCUIElementTypeOther[2]/XCUIElementTypeScrollView";
   }
 
   async isOnHomePage() {
-    console.log("user is on the homepage");
-    return await super.getElement(this.homePageElement);
+    if (
+      (await super.getElement(this.homePageElement)).isDisplayed() &&
+      (await super.getElement(this.archieveHabitsButton)).isDisplayed() &&
+      (await super.getElement(this.statisticsButton)).isDisplayed() &&
+      (await super.getElement(this.getSettingsButton)).isDisplayed()
+    ) {
+      console.log("User is on Homepage");
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  open() {
-    return super.open("login");
+  async habitListIsVisible() {
+    if ((await super.getElement(this.habitListEmpty)).isDisplayed()) {
+      console.log("list is empty");
+      return false;
+    } else if ((await super.getElement(this.habitListFilled)).isDisplayed()) {
+      console.log("list is filled");
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 

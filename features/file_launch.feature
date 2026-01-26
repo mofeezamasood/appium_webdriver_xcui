@@ -8,5 +8,5 @@ Feature: App Launch
     Given the Habo app is installed
     When I launch the Habo app
     Then the home screen should be displayed
-    And the habit list should be visible
+    And an empty habit list should be visible on first launch
     

@@ -8,9 +8,13 @@ const pages = {
 
 When("I launch the Habo app", async () => {
   console.log("Checking to see if the app is launched");
+
   const myPage = pages["home"];
   const myelemt = await myPage.isOnHomePage();
-  await expect(myelemt).toExist();
+
+  // await expect(await pages["home"].isOnHomePage());
+
+  await expect(myelemt).toBe(true);
   console.log("App is launched");
 });
 

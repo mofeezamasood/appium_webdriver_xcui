@@ -1,14 +1,29 @@
-const { Given, When, Then } = require("@wdio/cucumber-framework");
+const { Then } = require("@wdio/cucumber-framework");
 const { expect, $ } = require("@wdio/globals");
+const HomePage = require("../pageobjects/home.page");
 
-const LoginPage = require("../pageobjects/login.page");
+const pages = {
+  home: HomePage,
+};
 
-Then("the habit list should be visible", () => {
-  // Write code here that turns the phrase above into concrete actions
+Then("an empty habit list should be visible on first launch", async () => {
+  console.log("Checking to see if the habit list is visible");
+
+  const myPage = pages["home"];
+  const myelemt = await myPage.habitListIsVisible();
+
+  await expect(myelemt).toBe(false);
+  console.log("List is not visible (Empty)");
 });
 
-Then("the home screen should be displayed", () => {
-  // Write code here that turns the phrase above into concrete actions
+Then("the home screen should be displayed", async () => {
+  console.log("Checking to see if the home page is displayed");
+
+  const myPage = pages["home"];
+  const myelemt = await myPage.isOnHomePage();
+
+  await expect(myelemt).toBe(true);
+  console.log("App is launched");
 });
 
 Then("the habit {string} should appear in the habit list", (s) => {

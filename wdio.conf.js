@@ -53,10 +53,12 @@ exports.config = {
       // capabilities for local Appium web tests on iOS
       platformName: "iOS",
       "appium:automationName": "XCUITest",
-      "appium:deviceName": "iPhone 16e",
+      "appium:deviceName": "iPhone 17",
       "appium:platformVersion": "26.2",
       "appium:app": "com.pavlenko.Habo.mofi",
       "appium:noReset": "true",
+      "appium:fullReset": "false",
+      // "appium:wdaLaunchTimeout": "3000",
     },
   ],
 
