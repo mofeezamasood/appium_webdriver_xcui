@@ -11,7 +11,9 @@ Feature: Complete Habit
     Then the habit "<Habit>" should be marked as completed for date "<Date>"
 
   Examples:
-    |      Habit      | Date|
-    |   Drink Water   | Monday, January 26, 2026 |
-    |  Do Excercise   | Monday, January 26, 2026 |
-    |  Go on a Walk   | Tuesday, January 27, 2026 |
+    |      Habit      |           Date              |
+    |   Drink Water   | Monday, January 26, 2026    |
+    |   Eat Dinner    | Thursday, January 29, 2026   |
+    |  Do Excercise   | Tuesday, January 27, 2026   |
+    |  Go on a Walk   | Wednesday, January 28, 2026 |
+

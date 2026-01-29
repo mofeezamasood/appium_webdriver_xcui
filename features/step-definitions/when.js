@@ -31,3 +31,11 @@ When(
     await pages["home"].completeHabitForGivenDate(habitName, dateName);
   },
 );
+
+When("I delete the habit", async () => {
+  await pages["habit"].clickDeleteHabitButton();
+});
+
+When("I click on modify button for {string}", async (habitName) => {
+  await pages["home"].clickModifyButton(habitName);
+});

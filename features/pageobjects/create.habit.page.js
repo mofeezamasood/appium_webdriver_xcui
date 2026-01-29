@@ -1,22 +1,34 @@
-const { $ } = require("@wdio/globals");
 const Page = require("./page");
 
 class CreateHabit extends Page {
-  get getHabitTextField() {
-    return "XCUIElementTypeTextField"; // Use this selector from your original code
+  // Selectors
+  get habitTextField() {
+    return "XCUIElementTypeTextField";
   }
 
   get saveHabitButton() {
     return "accessibility id:Save";
   }
 
-  async enterHabitText(habit) {
-    const textField = await driver.$(this.getHabitTextField);
-    await textField.setValue(habit);
+  get deleteHabitButton() {
+    return '//XCUIElementTypeButton[@name="Delete\nDelete"]';
+  }
+
+  // Methods using base class
+  async enterHabitText(habitName) {
+    await super.setValue(this.habitTextField, habitName);
   }
 
   async clickSaveHabitButton() {
-    await driver.$(this.saveHabitButton).click();
+    await super.click(this.saveHabitButton);
+  }
+
+  async clickDeleteHabitButton() {
+    if (await super.isDisplayed(this.deleteHabitButton)) {
+      console.log(`Clicking Delete button for habit`);
+      await super.click(this.deleteHabitButton);
+      await super.pause(2000);
+    }
   }
 }
 

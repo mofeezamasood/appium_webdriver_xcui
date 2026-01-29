@@ -6,7 +6,15 @@ Feature: Delete Habit
 
   Scenario: Delete an existing habit
     Given the Habo app is launched
-    And a habit named "Meditate" exists
-    When I delete the habit "Meditate"
-    And I confirm the deletion
-    Then the habit "Meditate" should not appear in the habit list
+    And a habit named "<Habit>" exists
+    When I click on modify button for "<Habit>"
+    And I delete the habit
+    Then the habit "<Habit>" gets deleted
+    And the habit "<Habit>" should not appear in the habit list
+
+  Examples:
+    |      Habit      |
+    |   Drink Water   | 
+    # |  Do Excercise   | 
+    # |  Go on a Walk   |
+    # |   Eat Dinner    |

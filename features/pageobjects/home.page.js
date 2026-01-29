@@ -1,7 +1,7 @@
-const { $ } = require("@wdio/globals");
 const Page = require("./page");
 
 class HomePage extends Page {
+  // Selectors
   get homePageElement() {
     return '-ios class chain:**/XCUIElementTypeOther[`name == "Habo"`]';
   }
@@ -18,19 +18,46 @@ class HomePage extends Page {
     return "accessibility id:Check";
   }
 
+  get habitDeleted() {
+    return "accessibility id:Habit deleted.";
+  }
+
+  // Methods using base class methods
+  async isOnHomePage() {
+    return await super.isDisplayed(this.homePageElement);
+  }
+
+  async isHabitListEmpty() {
+    return await super.isDisplayed(this.habitListEmpty);
+  }
+
+  async clickAddHabit() {
+    await super.click(this.addHabitButton);
+  }
+
+  async clickCheckButton() {
+    console.log("Clicking Check button");
+    if (await super.isDisplayed(this.checkButton, 2000)) {
+      await super.click(this.checkButton);
+      return true;
+    } else {
+      console.log("Check button not found");
+      return false;
+    }
+  }
+
   async findHabitElement(habitName) {
     const selectors = [
-      `-ios class chain:**/XCUIElementTypeOther[\`name == "${habitName}"\`]`,
-      `//XCUIElementTypeOther[@name="${habitName}"]`,
-      `//XCUIElementTypeStaticText[@name="${habitName}"]`,
+      `accessibility id:${habitName}`,
+      `-ios class chain:**/XCUIElementTypeOther['name == "${habitName}"']`,
+      `-ios predicate string:name == "${habitName}"`,
       `//XCUIElementType*[@name="${habitName}"]`,
     ];
 
     for (const selector of selectors) {
       try {
-        const element = await driver.$(selector);
-        if (await element.isExisting()) {
-          return element;
+        if (await super.isDisplayed(selector, 1000)) {
+          return await super.getElement(selector);
         }
       } catch (error) {
         continue;
@@ -39,32 +66,14 @@ class HomePage extends Page {
     return null;
   }
 
-  async isOnHomePage() {
-    const homeElement = await driver.$(this.homePageElement);
-    return homeElement.isDisplayed();
-  }
-
-  async habitListIsVisible() {
-    try {
-      const emptyElement = await driver.$(this.habitListEmpty);
-      return !(await emptyElement.isDisplayed());
-    } catch {
-      return false;
-    }
-  }
-
-  async clickAddHabit() {
-    await driver.$(this.addHabitButton).click();
-  }
-
-  async isNewHabitDisplaying(habit) {
-    await driver.pause(2000);
-    const habitElement = await this.findHabitElement(habit);
+  async isNewHabitDisplaying(habitName) {
+    await super.pause(2000);
+    const habitElement = await this.findHabitElement(habitName);
     return habitElement !== null && (await habitElement.isDisplayed());
   }
 
   async completeHabitForGivenDate(habitName, dateName) {
-    await driver.pause(1000);
+    await super.pause(1000);
 
     const habitElement = await this.findHabitElement(habitName);
     if (!habitElement) {
@@ -75,7 +84,8 @@ class HomePage extends Page {
     const habitSize = await habitElement.getSize();
     const habitBottom = habitLocation.y + habitSize.height;
 
-    const allDateElements = await driver.$$(
+    // Using base class method
+    const allDateElements = await super.getElements(
       `//XCUIElementTypeStaticText[@name="${dateName}"]`,
     );
 
@@ -111,27 +121,13 @@ class HomePage extends Page {
       targetDateElement = allDateElements[0];
     }
 
-    // Click the date element
     await targetDateElement.click();
-    await driver.pause(500);
+    await super.pause(500);
 
-    // Now click the Check button
+    // Using base class method
     await this.clickCheckButton();
 
     return true;
-  }
-
-  async clickCheckButton() {
-    console.log("Clicking Check button");
-    const checkButton = await driver.$(this.checkButton);
-    if (await checkButton.isExisting()) {
-      await checkButton.click();
-      await driver.pause(500);
-      return true;
-    } else {
-      console.log("Check button not found");
-      return false;
-    }
   }
 
   async isHabitMarkedAsCompleted(habitName, dateName = null) {
@@ -140,10 +136,7 @@ class HomePage extends Page {
     );
 
     try {
-      // Wait for UI to update
-      await driver.pause(1000);
-
-      // Find the habit element
+      await super.pause(1000);
       const habitElement = await this.findHabitElement(habitName);
       if (!habitElement) {
         console.log(`Habit "${habitName}" not found`);
@@ -153,11 +146,81 @@ class HomePage extends Page {
       console.log(
         `Habit "${habitName}" found and actions were completed successfully`,
       );
-
       return true;
     } catch (error) {
       console.log(`Error checking if habit is completed: ${error.message}`);
       return false;
+    }
+  }
+
+  async clickModifyButton(habitName) {
+    await super.pause(2000);
+
+    console.log(`Attempting to click modify button on habit: ${habitName}`);
+
+    // First, find the habit element to get its location
+    const habitElement = await this.findHabitElement(habitName);
+
+    console.log(`habitElement: ${habitElement}`);
+
+    if (!habitElement) {
+      throw new Error(`Habit "${habitName}" not found`);
+    }
+
+    const habitLocation = await habitElement.getLocation();
+    const habitSize = await habitElement.getSize();
+    const habitCenterY = habitLocation.y + habitSize.height / 2;
+
+    // Try using XPath to find the Modify button near this habit
+    const modifyButtons = await super.getElements(
+      "//XCUIElementTypeButton[@name='Modify\nModify']",
+    );
+
+    if (modifyButtons.length > 0) {
+      // Find the Modify button closest to our habit
+      let closestButton = null;
+      let closestDistance = Infinity;
+
+      for (const button of modifyButtons) {
+        try {
+          const buttonLocation = await button.getLocation();
+          const buttonSize = await button.getSize();
+          const buttonCenterY = buttonLocation.y + buttonSize.height / 2;
+          const distance = Math.abs(buttonCenterY - habitCenterY);
+
+          if (distance < closestDistance && distance < 100) {
+            // Within 100 pixels
+            closestDistance = distance;
+            closestButton = button;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+
+      if (closestButton) {
+        console.log(
+          `Found Modify button at distance ${closestDistance} from habit`,
+        );
+
+        console.log(`closestButton: ${closestButton}`);
+
+        await closestButton.click();
+        await super.pause(2000);
+      }
+    }
+  }
+
+  async isHabitNotDisplaying(habitName) {
+    await super.pause(2000);
+    const habitElement = await this.findHabitElement(habitName);
+    return habitElement === null || !(await habitElement.isDisplayed());
+  }
+
+  async habitIsDeleted() {
+    if (await super.isDisplayed(this.habitDeleted, 5000)) {
+      console.log(`Habit deleted successfully`);
+      return true;
     }
   }
 }

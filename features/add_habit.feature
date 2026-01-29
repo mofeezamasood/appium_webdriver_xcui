@@ -16,3 +16,4 @@ Feature: Add Habit
     |   Drink Water   | 
     |  Do Excercise   | 
     |  Go on a Walk   |
+    |   Eat Dinner    |
