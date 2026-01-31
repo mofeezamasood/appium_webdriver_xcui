@@ -1,17 +1,43 @@
 {
-  "name": "appium-webdriver-xcui",
-  "version": "1.0.0",
-  "description": "",
+  "name": "habo-test-automation",
+  "version": "2.0.0",
+  "description": "Optimized WebdriverIO test automation for Habo habit tracking app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "wdio": "wdio run ./wdio.conf.js"
+    "test": "wdio run wdio.conf.js",
+    "test:dev": "TEST_ENV=dev wdio run wdio.conf.js",
+    "test:staging": "TEST_ENV=staging wdio run wdio.conf.js",
+    "test:prod": "TEST_ENV=production wdio run wdio.conf.js",
+    "test:smoke": "TAGS='@smoke' wdio run wdio.conf.js",
+    "test:regression": "TAGS='@regression' wdio run wdio.conf.js",
+    "test:feature": "wdio run wdio.conf.js --spec",
+    "test:debug": "LOG_LEVEL=debug wdio run wdio.conf.js",
+    "test:dry": "wdio run wdio.conf.js --dryRun",
+    "clean": "rm -rf screenshots/* logs/* test-results/* allure-results/*",
+    "report": "allure generate allure-results --clean && allure open",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "appium": "appium --port 4723",
+    "setup": "npm install && npm run clean"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "webdriverio",
+    "appium",
+    "cucumber",
+    "bdd",
+    "mobile-testing",
+    "ios-testing",
+    "automation",
+    "e2e"
+  ],
+  "author": "Your Name",
   "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
+    "@wdio/allure-reporter": "^9.0.0",
+    "@wdio/json-reporter": "^9.0.0",
+    "chai": "^4.3.10",
+    "eslint": "^8.56.0",
+    "eslint-plugin-wdio": "^8.0.0",
     "@testing-library/webdriverio": "^3.2.1",
     "@wdio/appium-service": "^9.23.2",
     "@wdio/cli": "^9.23.2",
@@ -22,5 +48,12 @@
     "appium": "^3.1.2",
     "appium-xcuitest-driver": "^10.18.1",
     "wdio-wait-for": "^3.1.1"
+  },
+  "dependencies": {
+    "allure-commandline": "^2.25.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }

@@ -1,0 +1,57 @@
+{
+  "valid": [
+    {
+      "name": "Drink Water",
+      "description": "Stay hydrated throughout the day"
+    },
+    {
+      "name": "Exercise",
+      "description": "30 minutes of physical activity"
+    },
+    {
+      "name": "Read Book",
+      "description": "Read for at least 20 minutes"
+    },
+    {
+      "name": "Meditate",
+      "description": "10 minutes of mindfulness"
+    },
+    {
+      "name": "Go on a Walk",
+      "description": "Take a walk outside"
+    },
+    {
+      "name": "Eat Healthy",
+      "description": "Make healthy food choices"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "",
+      "expectedError": "Habit name cannot be empty",
+      "testCase": "Empty habit name"
+    },
+    {
+      "name": "A",
+      "expectedError": "Habit name too short",
+      "testCase": "Single character name"
+    },
+    {
+      "name": "ThisIsAnExtremelyLongHabitNameThatExceedsTheMaximumAllowedLengthAndShouldBeRejectedByTheApplicationValidation",
+      "expectedError": "Habit name too long",
+      "testCase": "Excessive length name"
+    }
+  ],
+  "dates": {
+    "short": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "full": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ]
+  }
+}
