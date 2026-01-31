@@ -9,9 +9,10 @@
  */
 
 const { When } = require("@wdio/cucumber-framework");
-const HomePage = require("../pageobjects/HomePage");
-const CreateHabitPage = require("../pageobjects/CreateHabitPage");
-const logger = require("../utils/logger");
+const HomePage = require("../../pageobjects/HomePage");
+const CreateHabitPage = require("../../pageobjects/CreateHabitPage");
+const logger = require("../../utils/logger");
+const { APP } = require("../../config/constants");
 
 /**
  * Launch the app (redundant with Given, but kept for flexibility)
@@ -20,6 +21,8 @@ When("I launch the Habo app", async function () {
   logger.stepStart("Launch Habo app");
 
   try {
+    await driver.activateApp(APP.BUNDLE_ID);
+
     const isOnHomePage = await HomePage.isOnHomePage();
 
     if (!isOnHomePage) {
@@ -250,11 +253,11 @@ When("I create a new habit named {string}", async function (habitName) {
   }
 });
 
-When("I terminate the app", () => {
+When("I terminate the app", async () => {
   logger.stepStart("Terminate the app");
 
   try {
-    driver.terminateApp("com.habo.app");
+    await driver.terminateApp(APP.BUNDLE_ID);
 
     logger.info("✓ App terminated successfully");
     logger.stepEnd("Terminate the app");

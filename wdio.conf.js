@@ -62,7 +62,7 @@ exports.config = {
   // Cucumber Options
   // ===============
   cucumberOpts: {
-    require: ["./step-definitions/**/*.js"],
+    require: ["./features/step-definitions/**/*.js"],
     backtrace: false,
     requireModule: [],
     dryRun: false,

@@ -9,9 +9,9 @@
  */
 
 const { Then } = require("@wdio/cucumber-framework");
-const HomePage = require("../pageobjects/HomePage");
-const CreateHabitPage = require("../pageobjects/CreateHabitPage");
-const logger = require("../utils/logger");
+const HomePage = require("../../pageobjects/HomePage");
+const CreateHabitPage = require("../../pageobjects/CreateHabitPage");
+const logger = require("../../utils/logger");
 const { expect } = require("chai");
 
 /**

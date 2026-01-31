@@ -9,9 +9,9 @@
  */
 
 const { Given } = require("@wdio/cucumber-framework");
-const HomePage = require("../pageobjects/HomePage");
-const logger = require("../utils/logger");
-const { APP } = require("../config/constants");
+const HomePage = require("../../pageobjects/HomePage");
+const logger = require("../../utils/logger");
+const { APP } = require("../../config/constants");
 
 /**
  * Verify app is installed
