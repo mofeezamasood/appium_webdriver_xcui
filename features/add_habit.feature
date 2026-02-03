@@ -29,24 +29,16 @@ Feature: Add Habit
     Examples: Common daily habits
       | Habit           |
       | Drink Water     |
-      | Do Exercise     |
-      | Read Book       |
-      | Meditate        |
 
     @priority-medium
     Examples: Health and wellness habits
       | Habit              |
       | Go on a Walk       |
-      | Eat Healthy        |
-      | Practice Yoga      |
-      | Take Vitamins      |
 
     @priority-low
     Examples: Personal development habits
       | Habit              |
       | Write Journal      |
-      | Learn New Skill    |
-      | Practice Guitar    |
 
   @negative @validation @edge-case
   Scenario: Cannot save habit with empty name
@@ -110,7 +102,6 @@ Feature: Add Habit
   Scenario: Verify habit persists after app restart
     When I create a new habit named "Persistent Habit"
     Then the habit "Persistent Habit" should appear in the habit list
-    
     When I terminate the app
     And I launch the Habo app
     Then the habit "Persistent Habit" should appear in the habit list

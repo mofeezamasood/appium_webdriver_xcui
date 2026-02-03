@@ -47,9 +47,6 @@ class BasePage {
 
   /**
    * Get multiple elements matching selector
-   * @param {string} selector - Element selector
-   * @param {number} timeout - Maximum wait time in ms
-   * @returns {Promise<WebdriverIO.Element[]>}
    */
   async getElements(selector, timeout = this.defaultTimeout) {
     try {

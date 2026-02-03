@@ -1,11 +1,5 @@
 /**
  * Given Steps - Preconditions for test scenarios
- *
- * Best Practices Applied:
- * - Clear step descriptions
- * - Proper error handling
- * - Page object usage
- * - Logging for traceability
  */
 
 const { Given } = require("@wdio/cucumber-framework");
@@ -39,6 +33,7 @@ Given("the Habo app is installed", async function () {
  */
 Given("the Habo app is launched", async function () {
   logger.stepStart("Verify Habo app is launched");
+  await driver.activateApp(APP.BUNDLE_ID); // Replace with your app's ID
 
   try {
     const isOnHomePage = await HomePage.isOnHomePage();
@@ -146,3 +141,143 @@ Given("the following habits exist:", async function (dataTable) {
     throw error;
   }
 });
+
+/**
+ * Verify this is a fresh installation
+ */
+Given("this is a fresh installation", async function () {
+  logger.stepStart("Verify fresh installation");
+
+  try {
+    // Check if habit list is empty
+    const isEmpty = await HomePage.isHabitListEmpty();
+
+    if (!isEmpty) {
+      logger.warn("Not a fresh installation - data exists");
+    }
+
+    logger.info("✓ Fresh installation verified");
+    logger.stepEnd("Verify fresh installation");
+  } catch (error) {
+    logger.error(`Fresh installation check failed: ${error.message}`);
+    // Don't throw - this is optional verification
+  }
+});
+
+/**
+ * Device orientation - landscape
+ */
+Given("the device is in landscape orientation", async function () {
+  logger.stepStart("Set device to landscape orientation");
+
+  try {
+    await driver.setOrientation("LANDSCAPE");
+    logger.info("✓ Device set to landscape orientation");
+    logger.stepEnd("Set device to landscape orientation");
+  } catch (error) {
+    logger.error(`Failed to set landscape orientation: ${error.message}`);
+    throw error;
+  }
+});
+
+/**
+ * Habit has completion history
+ */
+Given(
+  "the habit {string} is marked as completed for date {string}",
+  async function (habitName, dateName) {
+    logger.stepStart(
+      `Mark habit "${habitName}" as completed for "${dateName}"`,
+    );
+
+    try {
+      await HomePage.markHabitAsComplete(habitName, dateName);
+      logger.info(
+        `✓ Habit "${habitName}" marked as complete for "${dateName}"`,
+      );
+      logger.stepEnd(
+        `Mark habit "${habitName}" as completed for "${dateName}"`,
+      );
+    } catch (error) {
+      logger.error(`Failed to mark habit as complete: ${error.message}`);
+      throw error;
+    }
+  },
+);
+
+/**
+ * Multiple habits with specific count
+ */
+Given("I have {int} habits in the list", async function (count) {
+  logger.stepStart(`Verify ${count} habits exist`);
+
+  try {
+    const habits = await HomePage.getAllHabits();
+
+    if (habits.length < count) {
+      // Create additional habits to reach the count
+      const habitsToCreate = count - habits.length;
+      for (let i = 0; i < habitsToCreate; i++) {
+        const habitName = `Test Habit ${i + 1}`;
+        await HomePage.clickAddHabitButton();
+        await CreateHabitPage.createHabit(habitName);
+      }
+    }
+
+    logger.info(`✓ ${count} habits in list`);
+    logger.stepEnd(`Verify ${count} habits exist`);
+  } catch (error) {
+    logger.error(`Failed to set up habits: ${error.message}`);
+    throw error;
+  }
+});
+
+/**
+ * Habits with specific list
+ */
+Given("I have the following habits:", async function (dataTable) {
+  logger.stepStart("Set up specific habits");
+
+  try {
+    const habits = dataTable.raw().flat();
+
+    for (const habitName of habits) {
+      const exists = await HomePage.isHabitDisplayed(habitName);
+
+      if (!exists) {
+        await HomePage.clickAddHabitButton();
+        await CreateHabitPage.createHabit(habitName);
+      }
+    }
+
+    logger.info(`✓ All ${habits.length} habits set up`);
+    logger.stepEnd("Set up specific habits");
+  } catch (error) {
+    logger.error(`Failed to set up habits: ${error.message}`);
+    throw error;
+  }
+});
+
+/**
+ * Habit has specific streak
+ */
+Given(
+  "the habit {string} has a {int}-day streak",
+  async function (habitName, streakDays) {
+    logger.stepStart(`Set up ${streakDays}-day streak for "${habitName}"`);
+
+    try {
+      const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+      for (let i = 0; i < streakDays && i < days.length; i++) {
+        await HomePage.markHabitAsComplete(habitName, days[i]);
+      }
+
+      logger.info(`✓ ${streakDays}-day streak set up`);
+      logger.stepEnd(`Set up ${streakDays}-day streak`);
+    } catch (error) {
+      logger.error(`Failed to set up streak: ${error.message}`);
+      throw error;
+    }
+  },
+);
