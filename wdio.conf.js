@@ -26,7 +26,7 @@ exports.config = {
       "appium:deviceName": "iPhone 17", // Hardcode for testing
       "appium:platformVersion": "26.2", // Hardcode for testing
       "appium:app": "com.pavlenko.Habo.mofi",
-      "appium:noReset": "true", // Use string format
+      "appium:noReset": "false", // Use string format
       "appium:fullReset": "false", // Use string format
       "appium:newCommandTimeout": 300,
       "appium:launchTimeout": 90000,
@@ -46,8 +46,16 @@ exports.config = {
   // Services
   // ========
   // Start with minimal service config
-  services: [["appium"]],
-
+  services: [
+    [
+      "appium",
+      {
+        // args: {
+        //   port: 4725,
+        // },
+      },
+    ],
+  ],
   // =========
   // Framework
   // =========

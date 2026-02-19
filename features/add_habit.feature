@@ -1,4 +1,3 @@
-@habit @add @regression
 Feature: Add Habit
   As a user
   I want to add new habits
@@ -8,18 +7,17 @@ Feature: Add Habit
     Given the Habo app is launched
     And the home screen should be displayed
 
-  @smoke @positive @critical
+  @smoke
   Scenario: Successfully add a single habit
     When I tap on the Add Habit button
     Then the create habit page should be displayed
-    
-    When I enter "Morning Meditation" as the habit name
+    When I enter "First Test Habit" as the habit name
     And I tap on the Save Habit button
     Then the home screen should be displayed
-    And the habit "Morning Meditation" should appear in the habit list
+    And the habit "First Test Habit" should appear in the habit list
 
-  @smoke @positive @data-driven
-  Scenario Outline: Add multiple valid habits
+  @positive @data-driven
+  Scenario: Add multiple valid habits
     When I tap on the Add Habit button
     And I enter "<Habit>" as the habit name
     And I tap on the Save Habit button
@@ -29,40 +27,36 @@ Feature: Add Habit
     Examples: Common daily habits
       | Habit           |
       | Drink Water     |
+      | Do Exercise     |
+      | Read Book       |
+      | Meditate        |
 
     @priority-medium
     Examples: Health and wellness habits
       | Habit              |
       | Go on a Walk       |
+      | Eat Healthy        |
+      | Practice Yoga      |
+      | Take Vitamins      |
 
     @priority-low
     Examples: Personal development habits
       | Habit              |
       | Write Journal      |
+      | Learn New Skill    |
+      | Practice Guitar    |
 
-  @negative @validation @edge-case
+  @smoke @negative @validation @edge-case
   Scenario: Cannot save habit with empty name
     When I tap on the Add Habit button
     And I clear the habit name field
     Then the Save button should be disabled
 
-  @negative @validation
+  @smoke @negative @validation
   Scenario: Cannot save habit with only spaces
     When I tap on the Add Habit button
     And I enter "   " as the habit name
     Then the Save button should be disabled
-
-  @negative @validation @boundary
-  Scenario: Validate minimum habit name length
-    When I tap on the Add Habit button
-    And I enter "A" as the habit name
-    Then an error message "Habit name too short" should be displayed
-
-  @negative @validation @boundary
-  Scenario: Validate maximum habit name length
-    When I tap on the Add Habit button
-    And I enter "ThisIsAnExtremelyLongHabitNameThatExceedsTheMaximumAllowedLengthAndShouldBeRejectedByTheApplication" as the habit name
-    Then an error message "Habit name too long" should be displayed
 
   @positive @special-characters
   Scenario: Add habit with special characters

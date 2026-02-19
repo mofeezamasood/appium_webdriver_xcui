@@ -1,5 +1,3 @@
-
-@smoke
 Feature: App Launch
   As a user
   I want the Habo app to launch successfully
@@ -40,7 +38,7 @@ Feature: App Launch
     And I bring the app to foreground
     Then the home screen should be displayed
 
-  @firstlaunch
+  @app
   Scenario: Multiple app launches
     Given the Habo app is installed
     When I launch the Habo app
